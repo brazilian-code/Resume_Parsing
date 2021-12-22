@@ -15,6 +15,13 @@ Our custom dataset consists of resumes from three resume books from graduate bus
 
 <img width="650" alt="resume_count_uni" src="https://user-images.githubusercontent.com/20906514/147151896-103f3997-2c89-4830-bf7c-17f05f1b4925.png">
 
+### Model
+The modeling approach that we took to create the resume parsing model was to use MaskRCNN and EasyOCR to parse through the resumes and extract the information.
+
+MaskRCNN is a pre-trained model generally used for object detection. We trained this model on the resumes available to us and used it to classify different portions of a resume using bounding boxes for each section of the resume, the weights that we used prior to training came from COCO dataset and are pretrained with 80 different classes on about 330K images
+
+Then for the text extraction part we used EasyOCR model which is an Optical Character Recognition model that is already trained on multiple languages (including english), has very high accuracy and it's very easy to use.
+
 
 ### Conclusion
 Selecting the right candidates from a pool of applicants can be one of the toughest jobs for the talent acquisition leaders. Moreover, going through each resume manually for every hiring season can be tiresome and time consuming. The machine learning resume parser tool can be a life saver for the entire company. It can provide unbiased solutions while overcoming possible manual errors.
