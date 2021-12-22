@@ -16,6 +16,6 @@ Our custom dataset consists of resumes from three resume books from graduate bus
 <img width="650" alt="resume_count_uni" src="https://user-images.githubusercontent.com/20906514/147151896-103f3997-2c89-4830-bf7c-17f05f1b4925.png">
 
 
-
-
+## Conclusion
+Selecting the right candidates from a pool of applicants can be one of the toughest jobs for the talent acquisition leaders. Moreover, going through each resume manually for every hiring season can be tiresome and time consuming. The machine learning resume parser tool can be a life saver for the entire company. It can provide unbiased solutions while overcoming possible manual errors.
 
