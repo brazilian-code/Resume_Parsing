@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotation>
+	<folder>Resumes</folder>
+	<filename>Test37.jpg</filename>
+	<path>/Users/daniellichter/Desktop/Macaulay:City/Fall 2021/Machine Learning/HaasXMLs</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1700</width>
+		<height>2200</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Personal Info</name>
+		<confidence>1</confidence>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>0</xmin>
+			<ymin>0</ymin>
+			<xmax>1700</xmax>
+			<ymax>201</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>Education</name>
+		<confidence>1</confidence>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>0</xmin>
+			<ymin>211</ymin>
+			<xmax>1700</xmax>
+			<ymax>574</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>Work Experience</name>
+		<confidence>1</confidence>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>0</xmin>
+			<ymin>584</ymin>
+			<xmax>1700</xmax>
+			<ymax>1870</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>Extra</name>
+		<confidence>1</confidence>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>0</xmin>
+			<ymin>1880</ymin>
+			<xmax>1700</xmax>
+			<ymax>2200</ymax>
+		</bndbox>
+	</object>
+</annotation>
