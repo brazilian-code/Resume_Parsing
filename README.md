@@ -18,9 +18,10 @@ Our custom dataset consists of resumes from three resume books from graduate bus
 ### Model
 The modeling approach that we took to create the resume parsing model was to use MaskRCNN and EasyOCR to parse through the resumes and extract the information.
 
-MaskRCNN is a pre-trained model generally used for object detection. We trained this model on the resumes available to us and used it to classify different portions of a resume using bounding boxes for each section of the resume, the weights that we used prior to training came from COCO dataset and are pretrained with 80 different classes on about 330K images
+MaskRCNN is a pre-trained model generally used for object detection. We trained this model on the resumes available to us and used it to classify different portions of a resume using bounding boxes for each section of the resume, the weights that we used prior to training came from COCO dataset and are pretrained with 80 different classes on about 330K images. Then for the text extraction part we used EasyOCR model which is an Optical Character Recognition model that is already trained on multiple languages (including english), has very high accuracy and it's very easy to use.
 
-Then for the text extraction part we used EasyOCR model which is an Optical Character Recognition model that is already trained on multiple languages (including english), has very high accuracy and it's very easy to use.
+Based on the mAP for each IoU Threshold on the 50 testing resumes, so for 75% IoU we got almost a 95% mAP which is very good, but again might be too good to be true since there might be some overfitting involved, then we can see that the 85% IoU Threshold had a mAP score of 73%, which is very good since we believe an 85% IoU threshold is enough for the model to be able to correctly find the sections and that even though there might be some overlapping it's been a very rare prediction. Finally, for the 95% IoU Threshold we see the abismal score of 0.167%, which again is understandable due to the ammount of training this model has gone through (Only about 850 resumes)
+
 
 
 ### Conclusion
