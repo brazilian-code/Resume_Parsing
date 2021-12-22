@@ -13,6 +13,6 @@ Keystone Strategy's recruiting team often receives large "resume books"  contain
 ## Data
 Our custom dataset consists of resumes from three resume books from graduate business schools such as Tuck School of Business at Dartmouth, Haas School of Business at Berekely, and Standard Graduate School of Business. In total, there are 841 resumes of MBA candidates.
 
-<img width="310" alt="resume_count_uni" src="https://user-images.githubusercontent.com/20906514/147151896-103f3997-2c89-4830-bf7c-17f05f1b4925.png">
+<img width="650" alt="resume_count_uni" src="https://user-images.githubusercontent.com/20906514/147151896-103f3997-2c89-4830-bf7c-17f05f1b4925.png">
 
 
