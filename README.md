@@ -32,7 +32,7 @@ Selecting the right candidates from a pool of applicants can be one of the tough
 
 To be able to run our app clone this repository and the first step is to make sure to run the requirements.txt file to install all necessary dependecies:
 ```
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 Then it's necessary to install poppler as well to handle the pdfs and there are two ways of doing this:
 ```
@@ -40,7 +40,7 @@ pip install python-poppler
 ```
 or
 ```
-conda install -c conda-forge popper
+conda install -c conda-forge poppler
 ```
 Then once all the necessaries packages have been installed we will run the application using the framework Streamlit by running the following code:
 ```
