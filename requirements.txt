@@ -3,7 +3,7 @@ seaborn
 pandas
 numpy
 pdf2image
-easyocr==1.4.1
+easyocr
 Pillow
 ipython
 streamlit
