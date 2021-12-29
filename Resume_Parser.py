@@ -4,8 +4,8 @@ Created on Wed Dec 22 02:48:47 2021
 
 @author: davba
 
-path to this file rn D:\ResumeIT\full_pipeline.py
-python -m streamlit run D:\ResumeIT\full_pipeline.py
+path to this file rn D:\ResumeIT\Resume_Parser.py
+python -m streamlit run D:\ResumeIT\Resume_Parser.py
 
 """
 import streamlit as st #framework 
@@ -29,13 +29,16 @@ import urllib.request
 import os
 import xml.etree
 import cv2
+import Train_MASKRCNN_Script as training
+
 
 @st.cache
 def convert_df(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv().encode('utf-8')
 
-def run_model(model_path,img_array):
+
+def run_model(model_path, img_array):
     CLASS_NAMES = ['BG', 'Personal Info', 'Education', 'Skills', 'Projects', 'Work Experience', 'Extra']
     
     class SimpleConfig(mrcnn.config.Config):
@@ -122,62 +125,79 @@ reader= easyocr.Reader(["en"]) # select language
 image_path ="C:/ResumeParser/tempDirectory/resume_image"
 # Get Resume Book and Split Resume
 
-uploaded_file =st.file_uploader("Upload Your Resume Book", type=['pdf'], accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None)
-if uploaded_file is not None:
-  if uploaded_file.type == "application/pdf":
-    images = pdf2image.convert_from_bytes(uploaded_file.read(),size=(1700,2200))
-    st.subheader("Please select page(s)")
-    start = st.number_input('Start with page',min_value =1,max_value=len(images),step=1,key="start_page")
-    end =  st.number_input('End with page',min_value=1,max_value=len(images),step=1,key="end_page")
-    
-    split_button = st.button("Split resume book", key='split_button')
-    if split_button:
-        for i in range(start-1,end):
-            img_index = i
-            resume = images[img_index]
-            
-            image_path = "C:/ResumeParser/tempDirectory/resume_image"
+st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>', unsafe_allow_html=True)
+st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;}</style>', unsafe_allow_html=True)
+
+choose=st.radio("Current Job",("Train Model","Parse Resumes"))
+
+if choose == "Parse Resumes":
+    uploaded_file =st.file_uploader("Upload Your Resume Book", type=['pdf'], accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None)
+    if uploaded_file is not None:
+      if uploaded_file.type == "application/pdf":
+        images = pdf2image.convert_from_bytes(uploaded_file.read(),size=(1700,2200))
+        st.subheader("Please select page(s)")
+        start = st.number_input('Start with page',min_value =1,max_value=len(images),step=1,key="start_page")
+        end =  st.number_input('End with page',min_value=1,max_value=len(images),step=1,key="end_page")
         
-            image_name = uploaded_file.name.split(".")[0] + str(img_index+1)
-            image_ext = image_name + ".jpg"
+        split_button = st.button("Split resume book", key='split_button')
+        if split_button:
+            for i in range(start-1,end):
+                img_index = i
+                resume = images[img_index]
+                
+                image_path = "C:/ResumeParser/tempDirectory/resume_image"
+            
+                image_name = uploaded_file.name.split(".")[0] + str(img_index+1)
+                image_ext = image_name + ".jpg"
+    
+                resume.save(f"{image_path}/{image_ext}") #save jpeg
+            st.success("Finished splitting the resume. Ready to run!")
+    
+    #Resume is split and saved as images so now we open that to get the resumes for prediction
+    
+    files = os.listdir(image_path)
+    img_array = list()
+    for name in files:
+        image = cv2.imread(image_path + "/" + name)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        img_array.append(image)
+    
+    
+    model_path = st.text_input("Model Path", value="", max_chars=None, key="Model_path_input")
+    
+    run_model_button = st.button("Run the Model", key='run_model_button')
+    
+    
+    # button "Click here to run the model"
+    df = pd.DataFrame()
+    if run_model_button:
+        df = run_model(model_path, img_array)
+    
+    st.dataframe(data = df)
+      
+    csv = convert_df(df)
+    
+    st.download_button(
+         label="Download data as CSV",
+         data=csv,
+         mime='text/csv')
+elif choose == "Train Model":
+    
+    #def train_model(dataset_path, model_path, num_epochs, final_model_path):
 
-            resume.save(f"{image_path}/{image_ext}") #save jpeg
-        st.success("Finished splitting the resume. Ready to run!")
-
-#Resume is split and saved as images so now we open that to get the resumes for prediction
-
-files = os.listdir(image_path)
-img_array = list()
-for name in files:
-    image = cv2.imread(image_path + "/" + name)
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    img_array.append(image)
-
-model_path = st.text_input("Model Path", value="", max_chars=None, key="Model_path_input")
-run_model_button = st.button("Run the Model", key='run_model_button')
-
-
-# button "Click here to run the model"
-df = pd.DataFrame()
-if run_model_button:
-    df = run_model(model_path,img_array)
-
-st.dataframe(data = df)
-
-#save_filename = st.text_input("Enter the file name for the csv file (Don't forget to include .csv)",key="csv_filename")
-#save_button = st.button("Save", key='save_button')
-
-#if save_button:
-#  df.to_csv(r'C:\\ResumeParser\\'+filename, index = False)
-  
-#st.write(df)
-#if save_button:
-#    f = open(r'C:\\ResumeParser\\'+filename, 'w').write(df.to_csv())
-#    f.close()
-  
-csv = convert_df(df)
-
-st.download_button(
-     label="Download data as CSV",
-     data=csv,
-     mime='text/csv')
+    dataset_path = st.text_input("Dataset Path (Folder containing Resumes and Resume Annotations folders)", value="", max_chars=None, key="dataset_path_input")
+    
+    initial_model_path = st.text_input("Base Model Path", value="", max_chars=None, key="Base_Model_path_input")
+    
+    num_epochs = st.number_input("Number of Epochs", key="Num_Epochs_input")
+    
+    final_model_path = st.text_input("Final Model Path", value="", max_chars=None, key="Final_Model_path_input")
+    
+    train_button = st.button("Train Model", key="Train_Model_Button")
+    
+    if train_button:
+        with st.spinner('Training the Model'):
+            training.train_model(dataset_path,initial_model_path, int(num_epochs), final_model_path)
+        st.success('Finished Training!')
+    
+    
