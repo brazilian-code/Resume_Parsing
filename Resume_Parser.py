@@ -31,6 +31,7 @@ import xml.etree
 import cv2
 import Train_MASKRCNN_Script as training
 
+
 @st.cache
 def convert_df(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
@@ -124,14 +125,13 @@ image_path ="C:/ResumeParser/tempDirectory/resume_image"
 # Get Resume Book and Split Resume
 
 
-col1, col2 = st.columns([1,1])
+st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>', unsafe_allow_html=True)
 
-with col1:
-    train_button = st.button('Train Model', key='train_button')
-with col2:
-    run_model = st.button('Run Model', key='run_button')
+st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;}</style>', unsafe_allow_html=True)
 
-if run_model:
+choose=st.radio("Current Job",("Train Model","Parse Resumes"))
+
+if choose == "Parse Resumes":
     uploaded_file =st.file_uploader("Upload Your Resume Book", type=['pdf'], accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None)
     if uploaded_file is not None:
       if uploaded_file.type == "application/pdf":
@@ -182,5 +182,23 @@ if run_model:
          label="Download data as CSV",
          data=csv,
          mime='text/csv')
-elif train_button:
-    st.write('train')
+elif choose == "Train Model":
+    
+    #def train_model(dataset_path, model_path, num_epochs, final_model_path):
+
+    dataset_path = st.text_input("Dataset Path (Folder containing Resumes and Resume Annotations folders)", value="", max_chars=None, key="dataset_path_input")
+    
+    initial_model_path = st.text_input("Base Model Path", value="", max_chars=None, key="Base_Model_path_input")
+    
+    num_epochs = st.number_input("Number of Epochs", key="Num_Epochs_input")
+    
+    final_model_path = st.text_input("Final Model Path", value="", max_chars=None, key="Final_Model_path_input")
+    
+    train_button = st.button("Train Model", key="Train_Model_Button")
+    
+    if train_button:
+        with st.spinner('Training the Model'):
+            training.train_model(dataset_path,initial_model_path, int(num_epochs), final_model_path)
+        st.success('Finished Training!')
+    
+    

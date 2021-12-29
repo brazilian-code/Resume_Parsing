@@ -44,8 +44,10 @@ class ResumeDataset(mrcnn.utils.Dataset):
         images_dir = dataset_dir + '\\Resumes\\'
         annotations_dir = dataset_dir + '\\Resume_Annotations\\'
         
+        dir_list = os.listdir(images_dir)
         count = 0
-        for filename in os.listdir(images_dir):
+        image_id = ""
+        for filename in dir_list:
             # Image ID is file name without .jpg
             image_id = filename[:-4]
 
