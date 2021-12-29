@@ -47,6 +47,7 @@ class ResumeDataset(mrcnn.utils.Dataset):
         dir_list = os.listdir(images_dir)
         count = 0
         image_id = ""
+
         for filename in dir_list:
             # Image ID is file name without .jpg
             image_id = filename[:-4]

@@ -37,6 +37,7 @@ def convert_df(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv().encode('utf-8')
 
+
 def run_model(model_path, img_array):
     CLASS_NAMES = ['BG', 'Personal Info', 'Education', 'Skills', 'Projects', 'Work Experience', 'Extra']
     
@@ -124,9 +125,7 @@ reader= easyocr.Reader(["en"]) # select language
 image_path ="C:/ResumeParser/tempDirectory/resume_image"
 # Get Resume Book and Split Resume
 
-
 st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>', unsafe_allow_html=True)
-
 st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;}</style>', unsafe_allow_html=True)
 
 choose=st.radio("Current Job",("Train Model","Parse Resumes"))

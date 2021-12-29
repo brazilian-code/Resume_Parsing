@@ -3,15 +3,12 @@ seaborn
 pandas
 numpy
 pdf2image
-easyocr==1.4.1
-PIL=8.0.1
+easyocr
+Pillow
 ipython
 streamlit
-xml
-cv2
+xml-python
+opencv-python
 tensorflow==1.13.1
 keras==2.2.5
-
-
-#conda install -c conda-forge popper
-#!git clone https://github.com/ahmedfgad/Mask-RCNN-TF2.git
+Python==3.7.10
