@@ -44,16 +44,18 @@ class ResumeDataset(mrcnn.utils.Dataset):
         images_dir = dataset_dir + '\\Resumes\\'
         annotations_dir = dataset_dir + '\\Resume_Annotations\\'
 
-        for filename in os.listdir(images_dir):
+        dir_list = os.listdir(images_dir)
+        count = 0
+        for filename in dir_list:
             # Image ID is file name without .jpg
             image_id = filename[:-4]
-            #Lets leave resume s107 for validation
-            if is_train and int(image_id[1:]) >= 85:
-                continue
 
-            if not is_train and int(image_id[1:]) < 85:
+            if is_train and count <= len(dir_list)*0.75:
                 continue
-
+        
+            if not is_train and count > len(dir_list)*0.75:
+                continue
+            count+=1
 
             img_path = images_dir + filename
             ann_path = annotations_dir + image_id + '.xml'

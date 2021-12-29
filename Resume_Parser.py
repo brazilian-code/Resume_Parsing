@@ -35,7 +35,7 @@ def convert_df(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv().encode('utf-8')
 
-def run_model(img_array):
+def run_model(model_path,img_array):
     CLASS_NAMES = ['BG', 'Personal Info', 'Education', 'Skills', 'Projects', 'Work Experience', 'Extra']
     
     class SimpleConfig(mrcnn.config.Config):
@@ -50,7 +50,7 @@ def run_model(img_array):
                                  config=SimpleConfig(),
                                  model_dir=os.getcwd())
     
-    model.load_weights(filepath=r'D:\\ResumeIT\\RESUMEIT_Model_Finalized.h5', 
+    model.load_weights(filepath=model_path, 
                        by_name=True)
     
     class_dict = {'bg' : 0, 
@@ -153,14 +153,14 @@ for name in files:
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     img_array.append(image)
 
-
+model_path = st.text_input("Model Path", value="", max_chars=None, key="Model_path_input")
 run_model_button = st.button("Run the Model", key='run_model_button')
 
 
 # button "Click here to run the model"
 df = pd.DataFrame()
 if run_model_button:
-    df = run_model(img_array)
+    df = run_model(model_path,img_array)
 
 st.dataframe(data = df)
 
