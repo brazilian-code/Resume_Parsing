@@ -43,17 +43,18 @@ class ResumeDataset(mrcnn.utils.Dataset):
         
         images_dir = dataset_dir + '\\Resumes\\'
         annotations_dir = dataset_dir + '\\Resume_Annotations\\'
-
+        
+        count = 0
         for filename in os.listdir(images_dir):
             # Image ID is file name without .jpg
             image_id = filename[:-4]
-            #Lets leave resume s107 for validation
-            if is_train and int(image_id[1:]) >= 85:
-                continue
 
-            if not is_train and int(image_id[1:]) < 85:
+            if is_train and count <= len(dir_list)*0.75:
                 continue
-
+        
+            if not is_train and count > len(dir_list)*0.75:
+                continue
+            count+=1
 
             img_path = images_dir + filename
             ann_path = annotations_dir + image_id + '.xml'
@@ -84,15 +85,15 @@ class ResumeDataset(mrcnn.utils.Dataset):
 
         boxes = list()
         for obj in root.findall('./object'):
-        	name = obj.find('name').text
-        	xmin = int(obj.find('bndbox/xmin').text)
-        	ymin = int(obj.find('bndbox/ymin').text)
-        	xmax = int(obj.find('bndbox/xmax').text)
-        	ymax = int(obj.find('bndbox/ymax').text)
-        	coors = [xmin, ymin, xmax, ymax]
-        	box_array = [name,coors]
-        	print(box_array)
-        	boxes.append(box_array)    
+            name = obj.find('name').text
+            xmin = int(obj.find('bndbox/xmin').text)
+            ymin = int(obj.find('bndbox/ymin').text)
+            xmax = int(obj.find('bndbox/xmax').text)
+            ymax = int(obj.find('bndbox/ymax').text)
+            coors = [xmin, ymin, xmax, ymax]
+            box_array = [name,coors]
+            print(box_array)
+            boxes.append(box_array)    
 
             
         width = int(root.find('.//size/width').text)
@@ -109,19 +110,19 @@ class ResumeConfig(mrcnn.config.Config):
     
     LEARNING_RATE = 0.001
 
-    STEPS_PER_EPOCH =  10
+    STEPS_PER_EPOCH =  131 
     
 
 
-def train_model(model_path, num_epochs, final_model_path):
+def train_model(dataset_path, model_path, num_epochs, final_model_path):
 
     # Training
     train_dataset = ResumeDataset()
-    train_dataset.load_dataset(dataset_dir=r'D:\\ResumeIT', is_train=True)
+    train_dataset.load_dataset(dataset_dir=dataset_path, is_train=True)
     train_dataset.prepare()
     # Validation
     validation_dataset = ResumeDataset()
-    validation_dataset.load_dataset(dataset_dir=r'D:\\ResumeIT', is_train=False)
+    validation_dataset.load_dataset(dataset_dir=dataset_path, is_train=False)
     validation_dataset.prepare()
     
     #For Training;
@@ -132,7 +133,6 @@ def train_model(model_path, num_epochs, final_model_path):
                                  config=config)
     model.keras_model.summary()
     
-    #r'D:\\ResumeIT\\RESUMEIT_Model_20Epochs_262Steps.h5'
     model.load_weights(filepath=model_path, by_name=True)
     
     print("Weights loaded!")
@@ -144,51 +144,6 @@ def train_model(model_path, num_epochs, final_model_path):
                 epochs=num_epochs,
                 layers='heads')
     
-    model_path = r'D:\\ResumeIT\\RESUMEIT_Model_Finalized.h5'
+
     model.keras_model.save_weights(final_model_path)
     print("Model Saved!")
-
-#train_model("D:\\ResumeIT\\RESUMEIT_Model_Finalized.h5", 1, "D:\\ResumeIT\\testing.h5")
-
-'''
-#For Predicting
-
-import mrcnn
-import mrcnn.config
-import mrcnn.model
-import mrcnn.visualize
-import cv2
-import os
-
-CLASS_NAMES = ['BG', 'Personal Info', 'Education', 'Skills', 'Projects', 'Work Experience', 'Extra']
-
-class SimpleConfig(mrcnn.config.Config):
-    NAME = "coco_inference"
-    
-    GPU_COUNT = 1
-    IMAGES_PER_GPU = 1
-
-    NUM_CLASSES = len(CLASS_NAMES)
-
-model = mrcnn.model.MaskRCNN(mode="inference", 
-                             config=SimpleConfig(),
-                             model_dir=os.getcwd())
-
-model.load_weights(filepath= r'D:\\ResumeIT\\RESUMEIT_Model_11_30_20Epochs_131Steps.h5', 
-                   by_name=True)
-
-image = cv2.imread(r'D:\\ResumeIT\\old_Resumes_11_30\\s109.jpg')
-image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-r = model.detect([image], verbose=0)
-
-r = r[0]
-
-mrcnn.visualize.display_instances(image=image, 
-                                  boxes=r['rois'], 
-                                  masks=r['masks'], 
-                                  class_ids=r['class_ids'], 
-                                  class_names=CLASS_NAMES, 
-                                  scores=r['scores'])
-
-'''
